@@ -1,0 +1,22 @@
+---
+
+- name: Create temporary directory to install peco
+  file:
+    path: "{{ peco_temporary_directory }}"
+    state: directory
+
+- name: Download and unarchive peco
+  unarchive:
+    src: "{{ peco_resource_url }}"
+    dest: "{{ peco_temporary_directory }}"
+    remote_src: yes
+    extra_opts: [ '--strip-components=1' ]
+
+- name: Install peco binary
+  copy:
+    src: "{{ [ peco_temporary_directory, 'peco' ] | join('/') | replace('//', '/') }}"
+    dest: "{{ [ peco_installation_directory, peco_binary_name ] | join('/') | replace('//', '/') }}"
+    remote_src: yes
+    owner: "{{ peco_binary_owner }}"
+    group: "{{ peco_binary_group }}"
+    mode: "{{ peco_binary_mode }}"

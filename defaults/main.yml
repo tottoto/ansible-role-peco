@@ -1,0 +1,9 @@
+---
+
+peco_version: "{{ peco_latest_version }}"
+peco_temporary_directory: /tmp/peco
+peco_installation_directory: /usr/local/bin
+peco_binary_name: peco
+peco_binary_owner: root
+peco_binary_group: root
+peco_binary_mode: 0755
