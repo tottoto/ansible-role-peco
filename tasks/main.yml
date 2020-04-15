@@ -1,22 +1,59 @@
 ---
 
-- name: Create temporary directory to install peco
-  file:
-    path: "{{ peco_temporary_directory }}"
-    state: directory
+- name: Create full path to peco binary
+  set_fact:
+    peco_binary_path: >-
+      {{
+      [ peco_installation_directory, peco_binary_name ]
+      | join('/')
+      | replace('//', '/')
+      }}
 
-- name: Download and unarchive peco
-  unarchive:
-    src: "{{ peco_resource_url }}"
-    dest: "{{ peco_temporary_directory }}"
-    remote_src: yes
-    extra_opts: [ '--strip-components=1' ]
+- name: Check peco is installed
+  stat:
+    path: "{{ peco_binary_path }}"
+  register: peco_installed_status
 
-- name: Install peco binary
-  copy:
-    src: "{{ [ peco_temporary_directory, 'peco' ] | join('/') | replace('//', '/') }}"
-    dest: "{{ [ peco_installation_directory, peco_binary_name ] | join('/') | replace('//', '/') }}"
-    remote_src: yes
-    owner: "{{ peco_binary_owner }}"
-    group: "{{ peco_binary_group }}"
-    mode: "{{ peco_binary_mode }}"
+- name: Get installed peco version and set to variable
+  block:
+
+    - name: Get installed peco version
+      shell: "{{ peco_binary_name }} --version | awk '{print $3}'"
+      register: peco_installed_version_status
+      changed_when: no
+      check_mode: no
+
+    - name: Set installed peco version
+      set_fact:
+        peco_installed_version: "{{ peco_installed_version_status.stdout }}"
+
+  when: peco_installed_status.stat.exists
+
+- name: Install peco
+  block:
+
+    - name: Create temporary directory to install peco
+      file:
+        path: "{{ peco_temporary_directory }}"
+        state: directory
+
+    - name: Download and unarchive peco
+      unarchive:
+        src: "{{ peco_resource_url }}"
+        dest: "{{ peco_temporary_directory }}"
+        remote_src: yes
+        extra_opts: [ "--strip-components=1" ]
+      when: not ansible_check_mode
+
+    - name: Install peco binary
+      copy:
+        src: "{{ [ peco_temporary_directory, 'peco' ] | join('/') | replace('//', '/') }}"
+        dest: "{{ peco_binary_path }}"
+        remote_src: yes
+        owner: "{{ peco_binary_owner }}"
+        group: "{{ peco_binary_group }}"
+        mode: "{{ peco_binary_mode }}"
+      when: not ansible_check_mode
+
+  when: (not peco_installed_status.stat.exists) or
+        (peco_version != peco_installed_version)
