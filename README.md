@@ -9,3 +9,13 @@ This is an ansible role to install [peco](https://github.com/peco/peco).
 - [jmespath](https://github.com/jmespath/jmespath.py)
     - jmespath is used to get the latest version of peco.
     - So this is not required when you specify the version of peco.
+
+## Installation
+
+```sh
+$ ansible-galaxy install tottoto.peco
+```
+
+## Custom variable
+
+See [defaults](./defaults/main.yml).
