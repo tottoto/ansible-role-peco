@@ -7,6 +7,7 @@ services: docker
 
 env:
   matrix:
+    - MOLECULE_DOCKER_IMAGE: ubuntu:xenial
     - MOLECULE_DOCKER_IMAGE: ubuntu:bionic
 
 install:
