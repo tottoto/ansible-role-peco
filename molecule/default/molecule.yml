@@ -5,7 +5,7 @@ driver:
   name: docker
 platforms:
   - name: instance
-    image: ubuntu:bionic
+    image: ${MOLECULE_DOCKER_IMAGE:-ubuntu:latest}
 provisioner:
   name: ansible
 lint: |

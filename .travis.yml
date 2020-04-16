@@ -5,6 +5,10 @@ python:
   - 3.7
 services: docker
 
+env:
+  matrix:
+    - MOLECULE_DOCKER_IMAGE: ubuntu:bionic
+
 install:
   - pip install pipenv
   - pipenv install --skip-lock
