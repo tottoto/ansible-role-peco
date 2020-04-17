@@ -23,9 +23,10 @@
       changed_when: no
       check_mode: no
 
-    - name: Set installed peco version
+    - name: Set installed peco version and check this will be changed
       set_fact:
         peco_installed_version: "{{ peco_installed_version_status.stdout }}"
+      changed_when: peco_version != peco_installed_version
 
   when: peco_installed_status.stat.exists
 
