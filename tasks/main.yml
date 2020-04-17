@@ -1,5 +1,9 @@
 ---
 
+- name: Expand variable peco_version
+  set_fact:
+    peco_version: "{{ peco_version }}"
+
 - name: Create full path to peco binary
   set_fact:
     peco_binary_path: >-
