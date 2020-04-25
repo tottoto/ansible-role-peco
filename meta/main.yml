@@ -21,5 +21,6 @@ galaxy_info:
       versions:
         - xenial
         - bionic
+        - focal
   galaxy_tags:
     - peco
