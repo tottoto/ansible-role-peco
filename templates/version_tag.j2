@@ -1,0 +1,5 @@
+{%- if peco_version == 'latest' -%}
+  {{ lookup('url', 'https://api.github.com/repos/peco/peco/releases/latest') | from_json | json_query('tag_name') }}
+{%- else -%}
+  {{ peco_version }}
+{%- endif -%}

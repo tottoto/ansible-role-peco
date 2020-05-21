@@ -1,9 +1,5 @@
 ---
 
-- name: Expand variable peco_version
-  set_fact:
-    peco_version: "{{ peco_version }}"
-
 - name: Create full path to peco binary
   set_fact:
     peco_binary_path: >-
@@ -21,6 +17,10 @@
 - name: Get installed peco version and set to variable
   block:
 
+    - name: Get peco version tag that will be installed
+      set_fact:
+        peco_version_tag: "{{ lookup('template', 'version_tag.j2') | trim }}"
+
     - name: Get installed peco version
       shell: "{{ peco_binary_name }} --version | awk '{print $3}'"
       register: peco_installed_version_status
@@ -30,7 +30,7 @@
     - name: Set installed peco version and check this will be changed
       set_fact:
         peco_installed_version: "{{ peco_installed_version_status.stdout }}"
-      changed_when: peco_version != peco_installed_version
+      changed_when: peco_version_tag != peco_installed_version
 
   when: peco_installed_status.stat.exists
 
@@ -61,4 +61,4 @@
       when: not ansible_check_mode
 
   when: (not peco_installed_status.stat.exists) or
-        (peco_version != peco_installed_version)
+        (peco_version_tag != peco_installed_version)

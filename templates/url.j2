@@ -1,0 +1,5 @@
+{%- if peco_version == 'latest' -%}
+  https://github.com/peco/peco/releases/latest/download/peco_linux_amd64.tar.gz
+{%- else -%}
+  https://github.com/peco/peco/releases/download/{{ peco_version }}/peco_linux_amd64.tar.gz
+{%- endif -%}
