@@ -6,6 +6,8 @@ python:
 services: docker
 
 env:
+  global:
+    - PIPENV_IGNORE_VIRTUALENVS: 1
   matrix:
     - MOLECULE_DOCKER_IMAGE: centos:6
     - MOLECULE_DOCKER_IMAGE: centos:7
