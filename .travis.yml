@@ -16,13 +16,20 @@ env:
     - MOLECULE_DOCKER_IMAGE: ubuntu:xenial
     - MOLECULE_DOCKER_IMAGE: ubuntu:bionic
     - MOLECULE_DOCKER_IMAGE: ubuntu:focal
+    - MOLECULE_DOCKER_IMAGE: ubuntu:latest
 
 install:
   - pip install pipenv
   - pipenv install --skip-lock
 
+jobs:
+  include:
+    - script:
+        - pipenv run test
+      env: MOLECULE_DOCKER_IMAGE=ubuntu:latest
+
 script:
-  - pipenv run test
+  - pipenv run test -s tagged
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
